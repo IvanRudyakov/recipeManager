@@ -16,9 +16,9 @@ The home screen is where you can find recipes. It will include all recipes and h
 
 The users screen will include all users that use the application. The users are local to the app, so everyone who uses the phone, such as in a family, will have their own user. On the users screen, you can create a new user, or click on a user. If you click on a user, you will be taken to the User-Recipes screen.
 
-# User-Recipes screen
+# Profile screen
 
-The user-recipes screen is how you can view the recipes of a specific user.
+The profile screen is how you can view the recipes of a specific user.
 
 # Create Recipe Screen
 
