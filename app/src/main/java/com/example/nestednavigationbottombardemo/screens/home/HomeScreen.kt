@@ -1,5 +1,6 @@
 package com.example.bottomnavbardemo.screens.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nestednavigationbottombardemo.BottomBarScreen
 import com.example.nestednavigationbottombardemo.graphs.HomeNavGraph
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(

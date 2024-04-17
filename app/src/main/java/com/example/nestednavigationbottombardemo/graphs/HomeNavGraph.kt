@@ -1,7 +1,6 @@
 package com.example.nestednavigationbottombardemo.graphs
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -9,11 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.nestednavigationbottombardemo.BottomBarScreen
-import com.example.nestednavigationbottombardemo.RecipeViewModel
+import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
 import com.example.nestednavigationbottombardemo.screens.ScreenContent
+import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
 @Composable
-fun HomeNavGraph(navController: NavHostController, recipeViewModel: RecipeViewModel = viewModel()) {
+fun HomeNavGraph(navController: NavHostController, usersViewModel: UsersViewModel = viewModel(), recipeViewModel: RecipeViewModel = viewModel()) {
     NavHost(
         navController = navController,
         route = Graph.HOME,
@@ -22,6 +22,7 @@ fun HomeNavGraph(navController: NavHostController, recipeViewModel: RecipeViewMo
         composable(route = BottomBarScreen.Home.route) {
             ScreenContent(
                 name = BottomBarScreen.Home.route,
+                usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel,
                 onClick = { navController.navigate(Graph.DETAILS) }
             )
@@ -29,6 +30,7 @@ fun HomeNavGraph(navController: NavHostController, recipeViewModel: RecipeViewMo
         composable(route = BottomBarScreen.Profile.route) {
             ScreenContent(
                 name = BottomBarScreen.Profile.route,
+                usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel,
                 onClick = { /* Handle onClick if needed */ }
             )
@@ -36,6 +38,7 @@ fun HomeNavGraph(navController: NavHostController, recipeViewModel: RecipeViewMo
         composable(route = BottomBarScreen.Create.route) {
             ScreenContent(
                 name = BottomBarScreen.Create.route,
+                usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel,
                 onClick = { /* Handle onClick if needed */ }
             )
@@ -43,15 +46,16 @@ fun HomeNavGraph(navController: NavHostController, recipeViewModel: RecipeViewMo
         composable(route = BottomBarScreen.Users.route) {
             ScreenContent(
                 name = BottomBarScreen.Users.route,
+                usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel,
                 onClick = { /* Handle onClick if needed */ }
             )
         }
-        detailsNavGraph(navController, recipeViewModel)
+        detailsNavGraph(navController, usersViewModel, recipeViewModel)
     }
 }
 
-fun NavGraphBuilder.detailsNavGraph(navController: NavHostController, recipeViewModel: RecipeViewModel) {
+fun NavGraphBuilder.detailsNavGraph(navController: NavHostController, usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel) {
     navigation(
         route = Graph.DETAILS,
         startDestination = DetailsScreen.Information.route
@@ -59,6 +63,7 @@ fun NavGraphBuilder.detailsNavGraph(navController: NavHostController, recipeView
         composable(route = DetailsScreen.Information.route) {
             ScreenContent(
                 name = DetailsScreen.Information.route,
+                usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel,
                 onClick = { navController.navigate(DetailsScreen.Overview.route) }
             )
@@ -66,6 +71,7 @@ fun NavGraphBuilder.detailsNavGraph(navController: NavHostController, recipeView
         composable(route = DetailsScreen.Overview.route) {
             ScreenContent(
                 name = DetailsScreen.Overview.route,
+                usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel,
                 onClick = { navController.popBackStack() }
             )

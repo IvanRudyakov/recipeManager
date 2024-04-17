@@ -5,9 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.nestednavigationbottombardemo.RecipeViewModel
+import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
 import com.example.nestednavigationbottombardemo.screens.LoginContent
-import com.example.nestednavigationbottombardemo.screens.ScreenContent
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(

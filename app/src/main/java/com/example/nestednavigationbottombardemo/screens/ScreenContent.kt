@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +29,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,23 +42,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.nestednavigationbottombardemo.Recipe
-import com.example.nestednavigationbottombardemo.RecipeViewModel
+import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
 import com.example.nestednavigationbottombardemo.User
 import com.example.nestednavigationbottombardemo.isOnline
+import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
 @Composable
-fun ScreenContent(name: String, recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
+fun ScreenContent(name: String, usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         when (name) {
-            "HOME" -> HomeScreen(onClick)
-            "USERS" -> UsersScreen(onClick)
+            "HOME" -> HomeScreen(recipeViewModel, onClick)
+            "USERS" -> UsersScreen(usersViewModel, onClick)
             "CREATE" -> CreateScreen(recipeViewModel)
             "PROFILE" -> ProfileScreen(recipeViewModel)
             else -> Text(
@@ -72,8 +71,9 @@ fun ScreenContent(name: String, recipeViewModel: RecipeViewModel, onClick: () ->
 }
 
 @Composable
-fun HomeScreen(onClick: () -> Unit) {
+fun HomeScreen(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
     var searchQuery by remember { mutableStateOf("") }
+    val recipes by recipeViewModel.recipeList.collectAsState();
 
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -84,7 +84,14 @@ fun HomeScreen(onClick: () -> Unit) {
                 label = { Text("Search for recipes") },
                 singleLine = true
             )
-            // Here you can add components to display search results based on searchQuery
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                items(recipes.filter { r -> r.title.contains(searchQuery, ignoreCase = true) }) { recipe ->
+                    RecipeDetailCard(recipe)
+                }
+            }
         }
     }
 }
@@ -92,15 +99,9 @@ fun HomeScreen(onClick: () -> Unit) {
 
 
 @Composable
-fun UsersScreen(onClick: () -> Unit) {
+fun UsersScreen(usersViewModel: UsersViewModel, onClick: () -> Unit) {
     // Sample data - assume this is your user data model list
-    val users = remember {
-        listOf(
-            User("Alice", 5),
-            User("Bob", 3),
-            User("Catherine", 9)
-        )
-    }
+    val users by usersViewModel.userList.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -246,7 +247,9 @@ fun CreateScreen(recipeViewModel: RecipeViewModel) {
 
 @Composable
 fun ProfileScreen(recipeViewModel: RecipeViewModel) {
-    print(recipeViewModel.username.value)
+
+    val recipes by recipeViewModel.recipeList.collectAsState();
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -266,7 +269,7 @@ fun ProfileScreen(recipeViewModel: RecipeViewModel) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            "${recipeViewModel.recipes.size} Recipes Created",
+            "${recipes.size} Recipes Created",
             style = MaterialTheme.typography.subtitle1
         )
         Spacer(modifier = Modifier.height(20.dp))
@@ -274,17 +277,15 @@ fun ProfileScreen(recipeViewModel: RecipeViewModel) {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(recipeViewModel.recipes) { recipe ->
-                RecipeDetailCard(recipe) {
-                    recipeViewModel.removeRecipe(recipe)
-                }
+            items(recipes) { recipe ->
+                RecipeDetailCard(recipe)
             }
         }
     }
 }
 
 @Composable
-fun RecipeDetailCard(recipe: Recipe, onDelete: () -> Unit) {
+fun RecipeDetailCard(recipe: Recipe) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -297,9 +298,6 @@ fun RecipeDetailCard(recipe: Recipe, onDelete: () -> Unit) {
             Text("Ingredients: ${recipe.ingredients}", style = MaterialTheme.typography.body2)
             Text("Steps: ${recipe.steps}", style = MaterialTheme.typography.body2)
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = onDelete) {
-                Text("Delete")
-            }
         }
     }
 }
