@@ -7,7 +7,6 @@ import androidx.room.Room
 object DatabaseProvider {
 
     private var recipesDatabase: RecipesDatabase? = null
-    private var usersDatabase: UsersDatabase? = null
     private var context: Context? = null;
 
     fun setContext(context: Context) {
@@ -22,15 +21,5 @@ object DatabaseProvider {
             ).build();
         }
         return recipesDatabase
-    }
-
-    fun getUsersDatabase(): UsersDatabase? {
-        if (usersDatabase == null && context != null) {
-            usersDatabase = Room.databaseBuilder(
-                context!!,
-                UsersDatabase::class.java, "users_database"
-            ).build();
-        }
-        return usersDatabase
     }
 }

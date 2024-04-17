@@ -20,14 +20,14 @@ import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 @Composable
 fun HomeScreen(navController: NavHostController = rememberNavController(), usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel) {
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = navController, usersViewModel = usersViewModel, recipeViewModel = recipeViewModel) }
     ) {
         HomeNavGraph(navController = navController, usersViewModel, recipeViewModel)
     }
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(navController: NavHostController, usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Users,
@@ -44,7 +44,9 @@ fun BottomBar(navController: NavHostController) {
                 AddItem(
                     screen = screen,
                     currentDestination = currentDestination,
-                    navController = navController
+                    navController = navController,
+                    usersViewModel = usersViewModel,
+                    recipeViewModel = recipeViewModel
                 )
             }
         }
@@ -55,7 +57,9 @@ fun BottomBar(navController: NavHostController) {
 fun RowScope.AddItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
-    navController: NavHostController
+    navController: NavHostController,
+    usersViewModel: UsersViewModel,
+    recipeViewModel: RecipeViewModel
 ) {
     BottomNavigationItem(
         label = {
@@ -72,6 +76,12 @@ fun RowScope.AddItem(
         } == true,
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
         onClick = {
+            if (screen.route == "HOME" || screen.route == "PROFILE") {
+                recipeViewModel.refresh()
+            }
+            if (screen.route == "USERS") {
+                usersViewModel.refresh()
+            }
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true

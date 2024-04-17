@@ -10,16 +10,9 @@ import retrofit2.http.POST
 
 interface ApiService {
     @GET("recipes")
-    fun fetchRecipes(): Call<JsonElement>;
+    suspend fun fetchRecipes(): JsonElement;
 
     @POST("recipes")
-    fun postRecipe(@Body recipe: RecipeApi): Call<Void>
-
-    @GET("users")
-    fun fetchUsers(): Call<JsonElement>;
-
-
-
-
+    suspend fun postRecipe(@Body recipe: RecipeApi)
 
 }

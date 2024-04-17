@@ -67,7 +67,6 @@ fun LoginContent(recipeViewModel: RecipeViewModel, usersViewModel: UsersViewMode
                 if (username != "" && username == password) {
                     usersViewModel.user = username;
                     recipeViewModel.refresh();
-                    usersViewModel.refresh();
                     Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
                     onClick()
                 } else {

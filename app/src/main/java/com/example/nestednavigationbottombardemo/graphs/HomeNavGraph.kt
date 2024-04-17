@@ -49,10 +49,7 @@ fun HomeNavGraph(navController: NavHostController, usersViewModel: UsersViewMode
                 name = BottomBarScreen.Users.route,
                 usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel,
-                onClick = {
-                    Log.d("aaa", "WHERE")
-                    usersViewModel.refresh()
-                }
+                onClick = {}
             )
         }
         detailsNavGraph(navController, usersViewModel, recipeViewModel)

@@ -13,7 +13,10 @@ interface RecipesDao {
     suspend fun getAll(): List<RecipesEntity?>?
 
     @Insert
-    suspend fun insertAll(product: List<RecipesEntity>)
+    suspend fun insertAll(recipes: List<RecipesEntity>)
+
+    @Insert
+    suspend fun insert(recipe: RecipesEntity)
 
     @Query("DELETE FROM recipes")
     suspend fun clearRecipes()
