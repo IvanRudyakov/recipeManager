@@ -59,8 +59,8 @@ fun ScreenContent(name: String, usersViewModel: UsersViewModel, recipeViewModel:
         when (name) {
             "HOME" -> HomeScreen(recipeViewModel, onClick)
             "USERS" -> UsersScreen(usersViewModel, onClick)
-            "CREATE" -> CreateScreen(recipeViewModel)
-            "PROFILE" -> ProfileScreen(recipeViewModel)
+            "CREATE" -> CreateScreen(recipeViewModel, usersViewModel)
+            "PROFILE" -> ProfileScreen(recipeViewModel, usersViewModel)
             else -> Text(
                 modifier = Modifier.clickable { onClick() },
                 text = name,
@@ -148,21 +148,20 @@ fun UserCard(user: User) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateScreen(recipeViewModel: RecipeViewModel) {
+fun CreateScreen(recipeViewModel: RecipeViewModel, usersViewModel: UsersViewModel) {
+    val curUser = usersViewModel.user;
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     var recipeName by remember { mutableStateOf("") }
-    var authors = remember { mutableStateListOf<String>("") }
-    var ingredients by remember { mutableStateOf("") }
+    var ingredients = remember { mutableStateListOf<String>("") }
     var steps by remember { mutableStateOf("") }
 
     fun clearAllFields() {
         recipeName = ""
-        authors.clear()
-        ingredients = ""
+        ingredients.clear()
         steps = ""
-        authors.add("")  // Start with an empty field for authors
+        ingredients.add("")  // Start with an empty field for authors
     }
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -175,44 +174,34 @@ fun CreateScreen(recipeViewModel: RecipeViewModel) {
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
-        for (index in authors.indices) {
+        for (index in ingredients.indices) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = authors[index],
-                    onValueChange = { authors[index] = it },
+                    value = ingredients[index],
+                    onValueChange = { ingredients[index] = it },
                     modifier = Modifier.weight(1f),
-                    label = { Text("Author") },
+                    label = { Text("Ingredient") },
                     singleLine = true
                 )
                 IconButton(onClick = {
-                    if (authors.size > 1) {
-                        authors.removeAt(index)
+                    if (ingredients.size > 1) {
+                        ingredients.removeAt(index)
                     } else {
-                        authors[index] = ""  // Clear the field if it's the only one
+                        ingredients[index] = ""  // Clear the field if it's the only one
                     }
                 }) {
                     Icon(Icons.Filled.Close, contentDescription = "Remove author")
                 }
-                if (index == authors.size - 1 && authors.size < 3) {
-                    IconButton(onClick = { if (authors.size < 3) authors.add("") }) {
+                if (index == ingredients.size - 1 && ingredients.size < 3) {
+                    IconButton(onClick = { if (ingredients.size < 3) ingredients.add("") }) {
                         Icon(Icons.Filled.Add, contentDescription = "Add another author")
                     }
                 }
             }
         }
-        OutlinedTextField(
-            value = ingredients,
-            onValueChange = { ingredients = it },
-            label = { Text("Ingredients") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(onNext = { /* Focus next field programmatically */ })
-        )
         OutlinedTextField(
             value = steps,
             onValueChange = { steps = it },
@@ -227,8 +216,8 @@ fun CreateScreen(recipeViewModel: RecipeViewModel) {
         Button(
             onClick = {
                 if (isOnline(context)) {
-                    if (recipeName.isNotEmpty() && authors.all { it.isNotEmpty() } && ingredients.isNotEmpty() && steps.isNotEmpty()) {
-                        recipeViewModel.addRecipe(Recipe(recipeName, authors.toList(), ingredients, steps))
+                    if (recipeName.isNotEmpty() && ingredients.isNotEmpty() && steps.isNotEmpty()) {
+                        recipeViewModel.addRecipe(Recipe(recipeName, curUser ?: "", ingredients.joinToString(), steps))
                         clearAllFields()
                         keyboardController?.hide()
                         Toast.makeText(context, "Recipe Created", Toast.LENGTH_SHORT).show()
@@ -238,7 +227,7 @@ fun CreateScreen(recipeViewModel: RecipeViewModel) {
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            enabled = recipeName.isNotEmpty() && authors.all { it.isNotEmpty() } && ingredients.isNotEmpty() && steps.isNotEmpty()
+            enabled = recipeName.isNotEmpty() && ingredients.isNotEmpty() && steps.isNotEmpty()
         ) {
             Text("Create Recipe")
         }
@@ -247,9 +236,12 @@ fun CreateScreen(recipeViewModel: RecipeViewModel) {
 
 
 @Composable
-fun ProfileScreen(recipeViewModel: RecipeViewModel) {
+fun ProfileScreen(recipeViewModel: RecipeViewModel, usersViewModel: UsersViewModel) {
 
     val recipes by recipeViewModel.recipeList.collectAsState();
+    val curUser = usersViewModel.user ?: "";
+
+    val ownRecipes = recipes.filter { r -> r.author == curUser };
 
     Column(
         modifier = Modifier
@@ -264,13 +256,13 @@ fun ProfileScreen(recipeViewModel: RecipeViewModel) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "admin",  // Displaying the dynamic username
+            text = curUser,  // Displaying the dynamic username
             style = MaterialTheme.typography.h4,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            "${recipes.size} Recipes Created",
+            "${ownRecipes.size} Recipes Created",
             style = MaterialTheme.typography.subtitle1
         )
         Spacer(modifier = Modifier.height(20.dp))
@@ -278,7 +270,7 @@ fun ProfileScreen(recipeViewModel: RecipeViewModel) {
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(recipes) { recipe ->
+            items(ownRecipes) { recipe ->
                 RecipeDetailCard(recipe)
             }
         }
@@ -295,7 +287,7 @@ fun RecipeDetailCard(recipe: Recipe) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(recipe.name, style = MaterialTheme.typography.h6)
-            Text("Authors: ${recipe.authors.joinToString()}", style = MaterialTheme.typography.body2)
+            Text("Author: ${recipe.author}", style = MaterialTheme.typography.body2)
             Text("Ingredients: ${recipe.ingredients}", style = MaterialTheme.typography.body2)
             Text("Steps: ${recipe.steps}", style = MaterialTheme.typography.body2)
             Spacer(modifier = Modifier.height(8.dp))

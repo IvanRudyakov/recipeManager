@@ -24,7 +24,7 @@ interface RecipesDao {
         val entities = recipes.map {
             val entity = RecipesEntity();
             entity.title = it.name;
-            entity.authors = it.authors.get(0);
+            entity.author = it.author;
             entity.ingredients = it.ingredients;
             entity.steps = it.steps;
             entity

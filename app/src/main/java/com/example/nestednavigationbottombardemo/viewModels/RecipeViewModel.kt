@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nestednavigationbottombardemo.Recipe
+import com.example.nestednavigationbottombardemo.api.RecipeApi
 import com.example.nestednavigationbottombardemo.api.RetrofitClient
 import com.example.nestednavigationbottombardemo.database.DatabaseProvider
 import com.google.gson.Gson
@@ -56,6 +57,7 @@ class RecipeViewModel : ViewModel() {
 
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 Log.d("aaa", "FAILURE RECIPES");
+                Log.d("aaa", t?.message ?: "");
                 _isLoading.value = false;
 
                 // Assuming user is not connected to internet.
@@ -65,7 +67,12 @@ class RecipeViewModel : ViewModel() {
     }
 
     fun addRecipe(recipe: Recipe) {
-        val call = RetrofitClient.instance.postRecipe(recipe);
+        val call = RetrofitClient.instance.postRecipe(RecipeApi(
+            recipe.name,
+            listOf(recipe.author),
+            recipe.ingredients,
+            recipe.steps
+        ));
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 val x = 3;
@@ -78,9 +85,9 @@ class RecipeViewModel : ViewModel() {
     }
 
     private fun processData(json: JsonElement?): List<Recipe> {
-        val listType = object : TypeToken<List<Recipe>>() {}.type
-        val recipes: List<Recipe> = Gson().fromJson(json, listType)
-        return recipes; //filterProducts(products)
+        val listType = object : TypeToken<List<RecipeApi>>() {}.type
+        val recipes: List<RecipeApi> = Gson().fromJson(json, listType)
+        return recipes.map {r -> Recipe(r.name, r.authors.get(0), r.ingredients, r.steps)}; //filterProducts(products)
     }
 
     private fun setRecipesFromDb() {
@@ -88,7 +95,7 @@ class RecipeViewModel : ViewModel() {
             val recipes = DatabaseProvider.getRecipesDatabase()?.recipesDao()?.getAll();
             if (recipes != null && recipes.size > 0) {
                 _recipeList.value = recipes.map {
-                        r -> Recipe(r?.title ?: "", listOf(r?.authors ?: ""), r?.ingredients ?: "", r?.steps ?: "")
+                        r -> Recipe(r?.title ?: "", r?.author ?: "", r?.ingredients ?: "", r?.steps ?: "")
                 }
                 _errors.value = null;
             }

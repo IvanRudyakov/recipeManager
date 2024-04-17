@@ -26,6 +26,8 @@ class UsersViewModel : ViewModel() {
     private val _errors = MutableStateFlow<String?>(null)
     val errors: StateFlow<String?> = _errors
 
+    var user: String? = null;
+
     fun refresh() {
         val call = RetrofitClient.instance.fetchUsers();
         _isLoading.value = true;

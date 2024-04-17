@@ -13,7 +13,7 @@ interface ApiService {
     fun fetchRecipes(): Call<JsonElement>;
 
     @POST("recipes")
-    fun postRecipe(@Body recipe: Recipe): Call<Void>
+    fun postRecipe(@Body recipe: RecipeApi): Call<Void>
 
     @GET("users")
     fun fetchUsers(): Call<JsonElement>;
