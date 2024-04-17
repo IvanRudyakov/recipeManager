@@ -1,11 +1,9 @@
 package com.example.nestednavigationbottombardemo.viewModels
 
-import androidx.compose.runtime.mutableStateListOf
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nestednavigationbottombardemo.Recipe
 import com.example.nestednavigationbottombardemo.User
-import com.example.nestednavigationbottombardemo.api.RecipeApi
 import com.example.nestednavigationbottombardemo.api.RetrofitClient
 import com.example.nestednavigationbottombardemo.database.DatabaseProvider
 import com.google.gson.Gson
@@ -29,14 +27,17 @@ class UsersViewModel : ViewModel() {
     val errors: StateFlow<String?> = _errors
 
     fun refresh() {
-        val call = RetrofitClient.instance.fetchRecipes();
+        val call = RetrofitClient.instance.fetchUsers();
         _isLoading.value = true;
         call.enqueue(object : Callback<JsonElement> {
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 if (response.isSuccessful) {
+                    Log.d("aaa", "SUCCESS USERS");
                     val data = response.body()
                     _isLoading.value = false;
                     val users = processData(data)
+                    Log.d("aaa", "users");
+                    Log.d("aaa", users.size.toString());
                     if (users.size == 0) {
                         _userList.value = listOf()
                         _errors.value = "No Users Available"
@@ -46,6 +47,7 @@ class UsersViewModel : ViewModel() {
                         _errors.value = null;
                     }
                 } else {
+                    Log.d("aaa", "ERROR USERS");
                     _isLoading.value = false;
                     _errors.value = "Unknown Error";
                     _userList.value = listOf();

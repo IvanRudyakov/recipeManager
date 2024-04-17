@@ -13,14 +13,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nestednavigationbottombardemo.BottomBarScreen
 import com.example.nestednavigationbottombardemo.graphs.HomeNavGraph
+import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
+import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController()) {
+fun HomeScreen(navController: NavHostController = rememberNavController(), usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel) {
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        HomeNavGraph(navController = navController)
+        HomeNavGraph(navController = navController, usersViewModel, recipeViewModel)
     }
 }
 

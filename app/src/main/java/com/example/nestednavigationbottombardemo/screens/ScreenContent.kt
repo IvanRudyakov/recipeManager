@@ -1,5 +1,6 @@
 package com.example.nestednavigationbottombardemo.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -88,7 +89,7 @@ fun HomeScreen(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(recipes.filter { r -> r.title.contains(searchQuery, ignoreCase = true) }) { recipe ->
+                items(recipes.filter { r -> r.name.contains(searchQuery, ignoreCase = true) }) { recipe ->
                     RecipeDetailCard(recipe)
                 }
             }
@@ -115,7 +116,7 @@ fun UsersScreen(usersViewModel: UsersViewModel, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(10.dp))
             LazyColumn {
-                items(users.filter { it.username.contains(searchQuery, ignoreCase = true) }) { user ->
+                items(users.filter { it.name.contains(searchQuery, ignoreCase = true) }) { user ->
                     UserCard(user)
                 }
             }
@@ -133,11 +134,11 @@ fun UserCard(user: User) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                text = user.username,
+                text = user.name,
                 style = MaterialTheme.typography.h6
             )
             Text(
-                text = "${user.recipeCount} recipes",
+                text = "${user.numberOfRecipes} recipes",
                 style = MaterialTheme.typography.body1
             )
         }
@@ -293,7 +294,7 @@ fun RecipeDetailCard(recipe: Recipe) {
         elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(recipe.title, style = MaterialTheme.typography.h6)
+            Text(recipe.name, style = MaterialTheme.typography.h6)
             Text("Authors: ${recipe.authors.joinToString()}", style = MaterialTheme.typography.body2)
             Text("Ingredients: ${recipe.ingredients}", style = MaterialTheme.typography.body2)
             Text("Steps: ${recipe.steps}", style = MaterialTheme.typography.body2)

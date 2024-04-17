@@ -1,4 +1,5 @@
 package com.example.nestednavigationbottombardemo.database
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -18,15 +19,17 @@ interface RecipesDao {
     suspend fun clearRecipes()
 
     suspend fun clearAndInsert(recipes: List<Recipe>) {
+        Log.d("aaa", "clear recipes")
         clearRecipes();
         val entities = recipes.map {
             val entity = RecipesEntity();
-            entity.title = it.title;
-            entity.author = it.authors.get(0);
+            entity.title = it.name;
+            entity.authors = it.authors.get(0);
             entity.ingredients = it.ingredients;
             entity.steps = it.steps;
             entity
         };
+
         insertAll(entities);
     }
 

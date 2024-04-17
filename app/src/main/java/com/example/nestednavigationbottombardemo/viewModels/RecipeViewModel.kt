@@ -1,11 +1,9 @@
 package com.example.nestednavigationbottombardemo.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.example.nestednavigationbottombardemo.Recipe
-import com.example.nestednavigationbottombardemo.api.RecipeApi
 import com.example.nestednavigationbottombardemo.api.RetrofitClient
 import com.example.nestednavigationbottombardemo.database.DatabaseProvider
 import com.google.gson.Gson
@@ -30,11 +28,13 @@ class RecipeViewModel : ViewModel() {
     val errors: StateFlow<String?> = _errors
 
     fun refresh() {
+        Log.d("aaa", "REFRESH RECIPES");
         val call = RetrofitClient.instance.fetchRecipes();
         _isLoading.value = true;
         call.enqueue(object : Callback<JsonElement> {
             override fun onResponse(call: Call<JsonElement>, response: Response<JsonElement>) {
                 if (response.isSuccessful) {
+                    Log.d("aaa", "SUCCESS RECIPES");
                     val data = response.body()
                     _isLoading.value = false;
                     val recipes = processData(data)
@@ -47,6 +47,7 @@ class RecipeViewModel : ViewModel() {
                         _errors.value = null;
                     }
                 } else {
+                    Log.d("aaa", "UNKNOWN ERROR");
                     _isLoading.value = false;
                     _errors.value = "Unknown Error";
                     _recipeList.value = listOf();
@@ -54,6 +55,7 @@ class RecipeViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
+                Log.d("aaa", "FAILURE RECIPES");
                 _isLoading.value = false;
 
                 // Assuming user is not connected to internet.
@@ -63,7 +65,7 @@ class RecipeViewModel : ViewModel() {
     }
 
     fun addRecipe(recipe: Recipe) {
-        val call = RetrofitClient.instance.postRecipe(RecipeApi(recipe.title, recipe.authors.get(0), recipe.ingredients, recipe.steps));
+        val call = RetrofitClient.instance.postRecipe(recipe);
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 val x = 3;
@@ -76,9 +78,9 @@ class RecipeViewModel : ViewModel() {
     }
 
     private fun processData(json: JsonElement?): List<Recipe> {
-        val listType = object : TypeToken<List<RecipeApi>>() {}.type
-        val recipes: List<RecipeApi> = Gson().fromJson(json, listType)
-        return recipes.map {r -> Recipe(r.title, listOf(r.authors), r.ingredients, r.steps) }; //filterProducts(products)
+        val listType = object : TypeToken<List<Recipe>>() {}.type
+        val recipes: List<Recipe> = Gson().fromJson(json, listType)
+        return recipes; //filterProducts(products)
     }
 
     private fun setRecipesFromDb() {
@@ -86,7 +88,7 @@ class RecipeViewModel : ViewModel() {
             val recipes = DatabaseProvider.getRecipesDatabase()?.recipesDao()?.getAll();
             if (recipes != null && recipes.size > 0) {
                 _recipeList.value = recipes.map {
-                        r -> Recipe(r?.title ?: "", listOf(r?.author ?: ""), r?.ingredients ?: "", r?.steps ?: "")
+                        r -> Recipe(r?.title ?: "", listOf(r?.authors ?: ""), r?.ingredients ?: "", r?.steps ?: "")
                 }
                 _errors.value = null;
             }

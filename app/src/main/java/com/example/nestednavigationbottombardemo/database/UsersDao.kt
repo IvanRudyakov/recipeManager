@@ -22,8 +22,8 @@ interface UsersDao {
         clearUsers();
         val entities = users.map {
             val entity = UsersEntity();
-            entity.username = it.username;
-            entity.recipeCount = it.recipeCount;
+            entity.username = it.name;
+            entity.recipeCount = it.numberOfRecipes;
             entity
         };
         insertAll(entities);

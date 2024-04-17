@@ -5,17 +5,26 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.bottomnavbardemo.screens.home.HomeScreen
+import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
+import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
 @Composable
-fun RootNavigationGraph(navController: NavHostController) {
+fun RootNavigationGraph(navController: NavHostController, usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
         startDestination = Graph.AUTHENTICATION
     ) {
-        authNavGraph(navController = navController)
+        authNavGraph(
+            navController = navController,
+            usersViewModel = usersViewModel,
+            recipeViewModel = recipeViewModel
+        )
         composable(route = Graph.HOME) {
-            HomeScreen()
+            HomeScreen(
+                usersViewModel = usersViewModel,
+                recipeViewModel = recipeViewModel
+            )
         }
     }
 }

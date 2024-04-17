@@ -1,5 +1,6 @@
 package com.example.nestednavigationbottombardemo.graphs
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
@@ -13,7 +14,7 @@ import com.example.nestednavigationbottombardemo.screens.ScreenContent
 import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
 @Composable
-fun HomeNavGraph(navController: NavHostController, usersViewModel: UsersViewModel = viewModel(), recipeViewModel: RecipeViewModel = viewModel()) {
+fun HomeNavGraph(navController: NavHostController, usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel) {
     NavHost(
         navController = navController,
         route = Graph.HOME,
@@ -48,7 +49,10 @@ fun HomeNavGraph(navController: NavHostController, usersViewModel: UsersViewMode
                 name = BottomBarScreen.Users.route,
                 usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel,
-                onClick = { /* Handle onClick if needed */ }
+                onClick = {
+                    Log.d("aaa", "WHERE")
+                    usersViewModel.refresh()
+                }
             )
         }
         detailsNavGraph(navController, usersViewModel, recipeViewModel)

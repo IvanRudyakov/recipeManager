@@ -1,6 +1,6 @@
 package com.example.nestednavigationbottombardemo
 
 data class User(
-    val username: String,
-    val recipeCount: Int
+    val name: String,
+    val numberOfRecipes: Int
 )

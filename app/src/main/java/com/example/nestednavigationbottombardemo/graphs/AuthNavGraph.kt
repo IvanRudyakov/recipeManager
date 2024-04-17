@@ -7,17 +7,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
 import com.example.nestednavigationbottombardemo.screens.LoginContent
+import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
-fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.authNavGraph(navController: NavHostController, recipeViewModel: RecipeViewModel, usersViewModel: UsersViewModel) {
     navigation(
         route = Graph.AUTHENTICATION,
         startDestination = AuthScreen.Login.route
     ) {
         composable(route = AuthScreen.Login.route) {
-            val recipeViewModel: RecipeViewModel = viewModel()
 
             LoginContent(
                 recipeViewModel = recipeViewModel,
+                usersViewModel = usersViewModel,
                 onClick = {
                     navController.popBackStack()
                     navController.navigate(Graph.HOME)

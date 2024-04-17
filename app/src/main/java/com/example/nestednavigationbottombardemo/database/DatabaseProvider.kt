@@ -28,7 +28,7 @@ object DatabaseProvider {
         if (usersDatabase == null && context != null) {
             usersDatabase = Room.databaseBuilder(
                 context!!,
-                UsersDatabase::class.java, "recipes_database"
+                UsersDatabase::class.java, "users_database"
             ).build();
         }
         return usersDatabase

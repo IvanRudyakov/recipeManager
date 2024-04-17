@@ -26,9 +26,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
+import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
 @Composable
-fun LoginContent(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
+fun LoginContent(recipeViewModel: RecipeViewModel, usersViewModel: UsersViewModel, onClick: () -> Unit) {
     val context = LocalContext.current
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -63,6 +64,8 @@ fun LoginContent(recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
         )
         Button(
             onClick = {
+                recipeViewModel.refresh();
+                usersViewModel.refresh();
                 if (username == "admin" && password == "admin") {
                     Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
                     onClick()
