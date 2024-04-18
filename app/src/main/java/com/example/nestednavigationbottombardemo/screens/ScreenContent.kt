@@ -1,6 +1,5 @@
 package com.example.nestednavigationbottombardemo.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,11 +43,21 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.nestednavigationbottombardemo.Recipe
 import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
 import com.example.nestednavigationbottombardemo.User
 import com.example.nestednavigationbottombardemo.isOnline
 import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun LoadImage(path: String) {
+    GlideImage(
+        model = path,
+        contentDescription = "LoadImage")
+}
 
 @Composable
 fun ScreenContent(name: String, usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
@@ -285,12 +294,17 @@ fun RecipeDetailCard(recipe: Recipe) {
             .padding(vertical = 4.dp),
         elevation = 4.dp
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(recipe.name, style = MaterialTheme.typography.h6)
-            Text("Author: ${recipe.author}", style = MaterialTheme.typography.body2)
-            Text("Ingredients: ${recipe.ingredients}", style = MaterialTheme.typography.body2)
-            Text("Steps: ${recipe.steps}", style = MaterialTheme.typography.body2)
-            Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            LoadImage("https://th.bing.com/th/id/OIP.g9meiANJcKP0ekLeCy4laQHaE7?rs=1&pid=ImgDetMain")
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(recipe.name, style = MaterialTheme.typography.h6)
+                Text("Author: ${recipe.author}", style = MaterialTheme.typography.body2)
+                Text("Ingredients: ${recipe.ingredients}", style = MaterialTheme.typography.body2)
+                Text("Steps: ${recipe.steps}", style = MaterialTheme.typography.body2)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }

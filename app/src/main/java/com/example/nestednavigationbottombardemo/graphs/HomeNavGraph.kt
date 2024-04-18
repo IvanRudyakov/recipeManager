@@ -1,8 +1,6 @@
 package com.example.nestednavigationbottombardemo.graphs
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
