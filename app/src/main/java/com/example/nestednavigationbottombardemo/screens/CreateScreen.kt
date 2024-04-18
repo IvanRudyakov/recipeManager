@@ -29,6 +29,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -62,7 +63,7 @@ fun CreateScreen(recipeViewModel: RecipeViewModel, usersViewModel: UsersViewMode
             value = recipeName,
             onValueChange = { recipeName = it },
             label = { Text("Recipe Name") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag("recipeName"),
             singleLine = true
         )
         for (index in ingredients.indices) {
