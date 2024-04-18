@@ -1,10 +1,16 @@
 package com.example.bottomnavbardemo.screens.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -13,12 +19,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nestednavigationbottombardemo.BottomBarScreen
 import com.example.nestednavigationbottombardemo.graphs.HomeNavGraph
+import com.example.nestednavigationbottombardemo.screens.CreateScreen
+import com.example.nestednavigationbottombardemo.screens.ProfileScreen
+import com.example.nestednavigationbottombardemo.screens.UsersScreen
 import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
 import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navController: NavHostController = rememberNavController(), usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel) {
+fun WholeScreen(navController: NavHostController = rememberNavController(), usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel) {
     Scaffold(
         bottomBar = { BottomBar(navController = navController, usersViewModel = usersViewModel, recipeViewModel = recipeViewModel) }
     ) {
@@ -88,4 +97,28 @@ fun RowScope.AddItem(
             }
         }
     )
+}
+
+@Composable
+fun ScreenContent(name: String, usersViewModel: UsersViewModel, recipeViewModel: RecipeViewModel, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        when (name) {
+            "HOME" -> com.example.nestednavigationbottombardemo.screens.HomeScreen(
+                recipeViewModel,
+                onClick
+            )
+            "USERS" -> UsersScreen(usersViewModel, onClick)
+            "CREATE" -> CreateScreen(recipeViewModel, usersViewModel)
+            "PROFILE" -> ProfileScreen(recipeViewModel, usersViewModel)
+            else -> Text(
+                modifier = Modifier.clickable { onClick() },
+                text = name,
+                fontSize = MaterialTheme.typography.h3.fontSize,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
 }

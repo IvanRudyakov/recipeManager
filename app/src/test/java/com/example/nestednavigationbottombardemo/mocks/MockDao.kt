@@ -7,6 +7,15 @@ class MockDao : RecipesDao {
 
     var recipeEntities: MutableList<RecipesEntity> = mutableListOf()
 
+    init {
+        val initialRecipeEntity = RecipesEntity();
+        initialRecipeEntity.title = "title";
+        initialRecipeEntity.author = "Sam";
+        initialRecipeEntity.ingredients = "ingredient1";
+        initialRecipeEntity.steps = "steps....";
+        recipeEntities.add(initialRecipeEntity);
+    }
+
     override suspend fun getAll(): List<RecipesEntity?>? {
         return recipeEntities;
     }

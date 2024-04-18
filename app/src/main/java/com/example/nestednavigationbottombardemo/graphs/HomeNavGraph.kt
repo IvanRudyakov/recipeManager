@@ -6,9 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.bottomnavbardemo.screens.home.ScreenContent
 import com.example.nestednavigationbottombardemo.BottomBarScreen
 import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
-import com.example.nestednavigationbottombardemo.screens.ScreenContent
 import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
 @Composable

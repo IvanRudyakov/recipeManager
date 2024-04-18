@@ -1,6 +1,7 @@
-package com.example.nestednavigationbottombardemo
+package com.example.nestednavigationbottombardemo.unitTests
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.nestednavigationbottombardemo.Recipe
 import com.example.nestednavigationbottombardemo.mocks.getMockRecipeViewModel
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,7 @@ class RecipesViewModelTest {
         Dispatchers.setMain(Dispatchers.Unconfined)
     }
     @Test
-    fun tesRefresh() = runTest {
+    fun testRefresh() = runTest {
 
         val liveData = underTest.recipeList
         underTest.refresh()

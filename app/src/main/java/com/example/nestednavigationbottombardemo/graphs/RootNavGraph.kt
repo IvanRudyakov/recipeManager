@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.bottomnavbardemo.screens.home.HomeScreen
+import com.example.bottomnavbardemo.screens.home.WholeScreen
 import com.example.nestednavigationbottombardemo.viewModels.RecipeViewModel
 import com.example.nestednavigationbottombardemo.viewModels.UsersViewModel
 
@@ -21,7 +21,7 @@ fun RootNavigationGraph(navController: NavHostController, usersViewModel: UsersV
             recipeViewModel = recipeViewModel
         )
         composable(route = Graph.HOME) {
-            HomeScreen(
+            WholeScreen(
                 usersViewModel = usersViewModel,
                 recipeViewModel = recipeViewModel
             )
